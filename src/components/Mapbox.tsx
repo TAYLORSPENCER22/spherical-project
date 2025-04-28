@@ -96,15 +96,14 @@ const Mapbox: React.FC = () => {
         //checks to see if we already have pins in local storage 
         //if we do, it displays them on the map 
         map.on('load', () => {
-
           try {
             const savedPins = localStorage.getItem('mapPins');
             if (savedPins) {
                 mapPinsRef.current = JSON.parse(savedPins);
-                const pinIds = Object.keys(mapPinsRef.current);
+                const pinIds = Object.keys(mapPinsRef.current);  //returns array of all id's from object 
                 // loading pins from localStorage to feature type that draw accepts
                 const newFeatures = pinIds.map(id => ({
-                    id,
+                    id: id,
                     type: "Feature",
                     properties: {},
                     geometry: {
@@ -257,7 +256,6 @@ const Mapbox: React.FC = () => {
         //we will then use that to create a new pop!
 
         const onFormChange = (e) => {
-            localStorage.setItem(editingPinRef.current, e.target.value);
             setFormText(e.target.value)
             
         }
