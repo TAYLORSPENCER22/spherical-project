@@ -13,8 +13,8 @@ html, body #root {
 }
 
 .container {
-  height: 90%;
-  width: 90%;
+  height: 75%;
+  width: 75%;
   position: relative;
 }
 
@@ -50,10 +50,16 @@ div.Footer p {
 }
 
 div.mapboxgl-popup-content {
-  width: 130px;
-  height: 55px;
+  width: 160px;
+  height: 75px;
   border-radius: 8px;
+  background: white;
+  border: 3px solid rgba(230, 240, 255, 0.6);;
+  font-family: "Comic Neue", cursive;
+  font-style: normal;
 }
+
+
 
 input#popup-input {
   margin: 0 0 3px 0;
@@ -72,19 +78,22 @@ form#popup-form {
   display: flex;
   margin: 0;
   padding: 20px;
-  background-color: rgb(255, 255, 255, 0.7);
+  background: rgba(230, 240, 255, 0.6);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
+  border-radius: 20px;
   flex-direction: column;
-  gap: 5px;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 1.3em;
   position: absolute;
   top: 10px;
   left: 10px;
   z-index: 50;
   align-content: center;
-  width: 250px;
+  width: 150px;
+  height: 150px ;
   z-index: 10;
-  outline: 2px solid rgb(200, 210, 220);
+  outline: 2px solid white;
   outline-offset: 0px;
 }
 
@@ -93,30 +102,47 @@ form#popup-form {
   outline-offset: -1px;
   }
 
-
+.formHeader {
+  font-family: "Comic Neue", cursive;
+  width: 100%;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction:row;
+  gap: 3px;
+  left: 180px;
+}
 
 .txtBox {
   border: 1px solid #ccc;
   text-wrap: wrap;
   padding: 5px;
-  min-width: 240px ;
-  max-width: 240px;
-  min-height: 30px;
-  max-height: 30px;
+  font-size: .6em;
+  min-width: 138px ;
+  max-width: 138px;
+  min-height: 62px;
+  max-height: 62px;
   border-radius: 8px;
   height: 40px;
+  font-family: "Comic Neue", cursive;
+  font-style: normal;
 }
 
 .saveBtn {
-  padding: 8px 16px;
+  padding: 4px 16px;
   background-color: #d8bee5;
+  font-size: 1em;
   outline: 2px solid white;
   outline-offset: -2px;
-  border-radius: 8px;
+  border-radius: 20px;
   color: white;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  font-family: "Comic Neue", cursive;
+  font-weight: bold;
+  font-style: normal;
 }
 
 

@@ -49,31 +49,42 @@ const Mapbox: React.FC = () => {
               trash: true
             }, 
             styles: [
-                {
-                  'id': 'highlight-active-points',
-                  'type': 'circle',
-                  'filter': ['all',
-                    ['==', '$type', 'Point'],
-                    ['==', 'meta', 'feature'],
-                    ['==', 'active', 'true']],
-                  'paint': {
-                    'circle-radius': 10,
-                    'circle-color': '#000000'
-                  }
-                },
-                {
-                  'id': 'points-are-blue',
-                  'type': 'circle',
-                  'filter': ['all',
-                    ['==', '$type', 'Point'],
-                    ['==', 'meta', 'feature'],
-                    ['==', 'active', 'false']],
-                  'paint': {
-                    'circle-radius': 8,
-                    'circle-color': '#000088'
-                  }
+              {
+                id: 'highlight-active-points',
+                type: 'circle',
+                filter: ['all',
+                  ['==', '$type', 'Point'],
+                  ['==', 'meta', 'feature'],
+                  ['==', 'active', 'true']
+                ],
+                paint: {
+                  // slightly larger, rosy-pink active pin
+                  'circle-radius': 12,
+                  'circle-color': '#ff9abc',          // soft rose
+                  'circle-stroke-color': '#ffffff',   // white outline
+                  'circle-stroke-width': 2,
+                  'circle-opacity': 0.9
                 }
-              ]
+              },
+              {
+                id: 'points-are-blue',
+                type: 'circle',
+                filter: ['all',
+                  ['==', '$type', 'Point'],
+                  ['==', 'meta', 'feature'],
+                  ['==', 'active', 'false']
+                ],
+                paint: {
+                  // smaller, lavender-blue inactive pin
+                  'circle-radius': 8,
+                  'circle-color': '#b8c0ff',          // pastel lavender-blue
+                  'circle-stroke-color': '#ffffff',   // white outline
+                  'circle-stroke-width': 1.5,
+                  'circle-opacity': 0.8
+                }
+              }
+            ]
+            
         });
           drawRef.current = draw;
 
@@ -267,14 +278,15 @@ const Mapbox: React.FC = () => {
             {mapFormVisible &&
         <form className='mapForm' >
             <div className="formHeader">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#000000" viewBox="0 0 256 256"><path d="M227.31,73.37,182.63,28.68a16,16,0,0,0-22.63,0L36.69,152A15.86,15.86,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31L227.31,96a16,16,0,0,0,0-22.63ZM51.31,160,136,75.31,152.69,92,68,176.68ZM48,179.31,76.69,208H48Zm48,25.38L79.31,188,164,103.31,180.69,120Zm96-96L147.31,64l24-24L216,84.68Z"></path></svg>
                 {formMode === 'create'
-                ? "You're creating a new pin"
-                : "You're editing an existing pin"}
+                ? " Create pin"
+                : " Edit pin"}
             </div>
             <textarea 
             className='txtBox'
-            maxLength={55} 
-            placeholder='insert info here'
+            maxLength={107} 
+            placeholder='tell me about this place .. '
             value={formText}
             onChange={onFormChange}
             >
