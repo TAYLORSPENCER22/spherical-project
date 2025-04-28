@@ -162,12 +162,17 @@ const Mapbox: React.FC = () => {
                 const moved = e.features?.[0];
                 if(!moved) return;
 
+                const id = String(moved.id);
                 const newCoords = moved.geometry.coordinates as [number, number];
 
-                if (popup.current && editingPinRef.current === moved.id) {
+                if (popup.current && editingPinRef.current === id) {
                     popup.current.setLngLat(newCoords);
                   }
-            });
+
+                if (mapPinsRef.current[id]) {
+                    mapPinsRef.current[id].geotag = newCoords;
+            }
+        });
 
 
             map.on('click', (e) => {
@@ -212,6 +217,7 @@ const Mapbox: React.FC = () => {
                         setFormText(mapPinsRef.current[editingPinRef.current].description)
                         popup.current.on('close',() => {
                             setFormText('');
+                            setMapFormVisible(false);
                         })
                     } 
                 }
@@ -234,7 +240,7 @@ const Mapbox: React.FC = () => {
             if (popup.current) {
                 popup.current.remove();
               }
-              
+
             popup.current = new mapboxgl.Popup({ offset: 25 })
                 .setLngLat(mapPinsRef.current[editingPinRef.current].geotag)
                 .setHTML(`<div>${formText}</div>`)
