@@ -82,7 +82,9 @@ const Mapbox: React.FC = () => {
             customAttribution: 'Taylor Spencer' }));
 
 
-        //waits for the map to finish loading, all logic must be inside
+        //runs all this code first
+        //checks to see if we already have pins in local storage 
+        //if we do, it displays them on the map 
         map.on('load', () => {
             const savedPins = localStorage.getItem('mapPins');
             console.log('savedPins', savedPins);
@@ -142,10 +144,22 @@ const Mapbox: React.FC = () => {
               });
             }
 
-            map.on('click', ["points-are-blue.hot",'highlight-active-points.hot',
-                            'points-are-blue.cold', 'highlight-active-points.cold' ] , (e) => { //this is the layer where the point is 
-                const feature = e.features?.[0]; //grabs the first element from the points array thats created on click (click event) and displays it 
 
+
+            map.on('click', (e) => {
+                // grab any click from these layers
+                const features = map.queryRenderedFeatures(e.point, {
+                  layers: [
+                    "points-are-blue.hot",
+                    "highlight-active-points.hot",
+                    "points-are-blue.cold",
+                    "highlight-active-points.cold"
+                  ],
+                  // radius: 12   
+                });
+                if (!features.length) return;
+              
+                const feature = features[0];
 
                 //if there is no point -- return 
                 if(!feature) {
@@ -199,22 +213,17 @@ const Mapbox: React.FC = () => {
             setFormText('');
         };
 
-        
-    
-
         //on form change -- it will trigger the event
-        //the event will take the text from the event and save it into set form text
+        //the event will take the text from the event and save it into setFormText
         //this is where we take the current form text and add it to the pop up that was just clicked
-
 
         const onFormChange = (e) => {
             localStorage.setItem(editingPinRef.current, e.target.value);
             setFormText(e.target.value)
-            // setMapPins({...mapPins, [currentEditingPin]: {...mapPins[currentEditingPin], description: e.target.value}})
+            
         }
         // localStorage.clear();
-        // console.log('length of items',localStorage.length);
-
+      
   return (
     <> 
     <div className='container'>
@@ -223,7 +232,7 @@ const Mapbox: React.FC = () => {
             {mapFormVisible &&
         <form className='mapForm' >
             <textarea 
-            className={`txtBox ${!mapFormVisible ? 'hide' : ''}`}
+            className='txtBox'
             maxLength={55} 
             placeholder='insert info here'
             value={formText}
