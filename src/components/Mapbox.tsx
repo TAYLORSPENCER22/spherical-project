@@ -9,7 +9,6 @@ import '../App.css'; //css for page
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 
 
-//typescript creating a react functional component
 const Mapbox: React.FC = () => {
     const mapContainer = useRef<HTMLDivElement | null>(null); //reference to mapcontainer div (initialized to null -- currently null)
     const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -21,15 +20,15 @@ const Mapbox: React.FC = () => {
     
     const [mapFormVisible, setMapFormVisible] = useState(false);
     const [formText, setFormText] = useState('');
-    type  FormMode = 'create' | 'edit';
+    type  FormMode = 'create' | 'edit'; //types are immutable 
     const [formMode, setFormMode] = useState<FormMode>('create');
 
 
     useEffect (() => {
 
-    if (mapContainer.current) {//check to see if map exists 
+        if (!mapContainer.current) return;
        
-        //syntax to create a new map 
+        //create a new map 
     const map = new mapboxgl.Map({
         container: mapContainer.current, //render this map inside the mapContainer - container means where do we want to put the map, currenet means this element  
         style: 'mapbox://styles/mapbox/streets-v12', //simple mapbox style 
@@ -39,7 +38,6 @@ const Mapbox: React.FC = () => {
         });
 
         mapRef.current = map;
-        (window as any).map = mapRef.current; //get access to map anywhere
         
         //add points and lines with mapbox draw
         const draw = new MapboxDraw({
@@ -95,16 +93,15 @@ const Mapbox: React.FC = () => {
             customAttribution: 'Taylor Spencer' }));
 
 
-        //runs all this code first
         //checks to see if we already have pins in local storage 
         //if we do, it displays them on the map 
         map.on('load', () => {
+
+          try {
             const savedPins = localStorage.getItem('mapPins');
-            console.log('savedPins', savedPins);
             if (savedPins) {
                 mapPinsRef.current = JSON.parse(savedPins);
                 const pinIds = Object.keys(mapPinsRef.current);
-                console.log('pinIds', pinIds);
                 // loading pins from localStorage to feature type that draw accepts
                 const newFeatures = pinIds.map(id => ({
                     id,
@@ -115,42 +112,44 @@ const Mapbox: React.FC = () => {
                         coordinates: mapPinsRef.current[id].geotag,
                     }
                 }))
-                console.log('newFeatures', newFeatures);
+                // console.log('newFeatures', newFeatures);
                 // loads all features to map
                 draw.add({type: "FeatureCollection", features: newFeatures});
             }
+          } catch (err) {
+            console.log('Failed to load pins from storage', err);
+          }
+          
 
 
             map.on('draw.delete', (e) => {
 
-                //parse current storage 
-                const pins = JSON.parse(localStorage.getItem('mapPins') || '{}');
+              try {
+                  //parse current storage 
+                  const pins = JSON.parse(localStorage.getItem('mapPins') || '{}');
 
-                //loop through and delete the deleted
-                for (let i = 0; i < e.features.length; i++) {
-                    const feat = e.features[i];
-                    delete pins[feat.id];
-                  }
-
-                //stringify and return 
-                localStorage.setItem('mapPins', JSON.stringify(pins));
-                console.log('remaining pins:', pins);
-
+                  //loop through and delete the deleted
+                  for (let i = 0; i < e.features.length; i++) {
+                      const feat = e.features[i];
+                      delete pins[feat.id];
+                    }
+  
+                  //stringify and return 
+                  localStorage.setItem('mapPins', JSON.stringify(pins));  
+              } catch (err) {
+                console.error('Error updating storage after delete', err);
+              }   
                 //close pop up when you delete 
-
                 if (popup.current) {
                     popup.current.remove();
                     popup.current = null;
                 }
-
                 setMapFormVisible(false);
            })
 
 
             map.on('draw.create', (e) => {
-                console.log("DRAW", e);
                 const newPin = e.features?.[0]
-                console.log('wtf?', newPin);
                 if (newPin) {
                     editingPinRef.current = newPin.id;
                     mapPinsRef.current = {...mapPinsRef.current, [newPin.id]: {description: '', geotag: newPin.geometry.coordinates}};
@@ -208,19 +207,13 @@ const Mapbox: React.FC = () => {
                     return; //check  
                 } else {
 
-                    console.log('feature', feature);
-
                     editingPinRef.current = feature.properties.id;
                     setFormMode('edit');
 
-                    console.log('all local', localStorage)
-                    console.log('editingPinRef', editingPinRef.current);
-                    console.log('mapPins1', mapPinsRef.current);
                     //might have to check if currentEditingPin exists in mapPins
 
                     if (editingPinRef.current) {
                         //  create pop
-                        console.log('MADE IT');
                         popup.current = new mapboxgl.Popup({ offset: 25})
                             .setLngLat(mapPinsRef.current[editingPinRef.current].geotag)
                             .setHTML(`<div >${mapPinsRef.current[editingPinRef.current].description || "you need a description :)"}</div>`)
@@ -238,13 +231,12 @@ const Mapbox: React.FC = () => {
         })
         
       return () => map.remove();
-   }}, []);
+   }, []);
 
  
         const handleSave = () => {
-
             if (!mapRef.current) return;
-           
+            
             mapPinsRef.current = {...mapPinsRef.current, [editingPinRef.current]: {...mapPinsRef.current[editingPinRef.current], description: formText}};
             localStorage.setItem('mapPins', JSON.stringify(mapPinsRef.current));
         
