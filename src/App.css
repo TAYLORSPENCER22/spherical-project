@@ -1,0 +1,123 @@
+html, body #root {
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  background-color: rgb(228, 236, 247);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.container {
+  height: 90%;
+  width: 90%;
+  position: relative;
+}
+
+.map {
+ height: 100%;
+ width: 100%;
+ border-radius: 15px;
+ /* overflow: hidden; */
+ border: 2px solid rgb(200, 210, 220);
+}
+
+div.Header {
+  height: 100px;
+  width: 100%;
+  margin: 0;
+  font-family: 'Nerko One';
+  color: rgb(43, 72, 98);
+  font-size: 22px;
+}
+
+
+div.Footer {
+  height: 100px;
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+  margin: auto;
+}
+
+div.Footer p {
+  font-family: 'Nerko One';
+  color: rgb(128, 158, 185);
+}
+
+div.mapboxgl-popup-content {
+  width: 130px;
+  height: 55px;
+}
+
+input#popup-input {
+  margin: 0 0 3px 0;
+  font-family: fantasy;
+}
+
+form#popup-form {
+  height: 100%;
+  display: flex;
+  gap:2px;
+  justify-content: flex-end;
+  align-content: center;
+}
+
+.mapForm {
+  display: flex;
+  margin: 0;
+  padding: 20px;
+  background-color: rgb(255, 255, 255, 0.7);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  flex-direction: column;
+  gap: 5px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 50;
+  align-content: center;
+  width: 250px;
+  z-index: 10;
+  outline: 2px solid rgb(200, 210, 220);
+  outline-offset: 0px;
+}
+
+  .mapForm:hover {
+  outline-offset: solid 1px rgb(42, 42, 160);
+  outline-offset: -1px;
+  }
+
+
+
+.txtBox {
+  border: 1px solid #ccc;
+  text-wrap: wrap;
+  padding: 5px;
+  min-width: 240px ;
+  max-width: 240px;
+  min-height: 30px;
+  max-height: 30px;
+  border-radius: 8px;
+  height: 40px;
+}
+
+.saveBtn {
+  padding: 8px 16px;
+  background-color: #d8bee5;
+  outline: 2px solid white;
+  outline-offset: -2px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+
+
+
