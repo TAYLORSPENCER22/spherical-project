@@ -78,7 +78,7 @@ form#popup-form {
   display: flex;
   margin: 0;
   padding: 20px;
-  background: rgba(230, 240, 255, 0.6);
+  background: rgba(230, 240, 255, 0.7);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border-radius: 20px;
   flex-direction: column;
@@ -112,6 +112,7 @@ form#popup-form {
   flex-direction:row;
   gap: 3px;
   left: 180px;
+  color: #347D7D;
 }
 
 .txtBox {
@@ -131,10 +132,13 @@ form#popup-form {
 
 .saveBtn {
   padding: 4px 16px;
-  background-color: #d8bee5;
+  background: linear-gradient(
+    135deg,
+    rgba(184,192,255,0.5) 0%, 
+    rgba(220,212,255,0.5) 100%   
+  );
+  border: 2px solid rgba(255,255,255,0.6);
   font-size: 1em;
-  outline: 2px solid white;
-  outline-offset: -2px;
   border-radius: 20px;
   color: white;
   font-weight: 600;
@@ -143,6 +147,15 @@ form#popup-form {
   font-family: "Comic Neue", cursive;
   font-weight: bold;
   font-style: normal;
+}
+
+.saveBtn:hover {
+
+  background: linear-gradient(
+    135deg,
+    rgba(184,192,255) 0%,    /* was #b8c0ff */
+    rgba(220,212,255) 100%   /* was #dcd4ff */
+  );
 }
 
 
