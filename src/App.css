@@ -146,5 +146,9 @@ form#popup-form {
 }
 
 
-
+@media only screen and (max-width: 400px) {
+  div.Header {
+    font-size: 19px; /* or whatever size feels right */
+  }
+}
 
