@@ -124,6 +124,15 @@ const Mapbox: React.FC = () => {
                 //stringify and return 
                 localStorage.setItem('mapPins', JSON.stringify(pins));
                 console.log('remaining pins:', pins);
+
+                //close pop up when you delete 
+
+                if (popup.current) {
+                    popup.current.remove();
+                    popup.current = null;
+                }
+
+                setMapFormVisible(false);
            })
 
 
@@ -148,6 +157,17 @@ const Mapbox: React.FC = () => {
               });
             }
 
+            //update the pop up to match the new pin coords 
+            map.on('draw.update', (e) => {
+                const moved = e.features?.[0];
+                if(!moved) return;
+
+                const newCoords = moved.geometry.coordinates as [number, number];
+
+                if (popup.current && editingPinRef.current === moved.id) {
+                    popup.current.setLngLat(newCoords);
+                  }
+            });
 
 
             map.on('click', (e) => {
@@ -159,7 +179,7 @@ const Mapbox: React.FC = () => {
                     "points-are-blue.cold",
                     "highlight-active-points.cold"
                   ],
-                //   radius: 12   
+                   
                 });
                 if (features.length === 0) {
                     setMapFormVisible(false);
@@ -212,17 +232,19 @@ const Mapbox: React.FC = () => {
             localStorage.setItem('mapPins', JSON.stringify(mapPinsRef.current));
         
             if (popup.current) {
-                popup.current.setLngLat(mapPinsRef.current[editingPinRef.current].geotag)
-                .setHTML(`<div >${formText}</div>`)
+                popup.current.remove();
+              }
+              
+            popup.current = new mapboxgl.Popup({ offset: 25 })
+                .setLngLat(mapPinsRef.current[editingPinRef.current].geotag)
+                .setHTML(`<div>${formText}</div>`)
                 .addTo(mapRef.current);
-            }
             setMapFormVisible(false);
             setFormText('');
         };
 
-        //on form change -- it will trigger the event
-        //the event will take the text from the event and save it into setFormText
-        //this is where we take the current form text and add it to the pop up that was just clicked
+        //on form change we will update the state of setFormText
+        //we will then use that to create a new pop!
 
         const onFormChange = (e) => {
             localStorage.setItem(editingPinRef.current, e.target.value);
