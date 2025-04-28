@@ -223,7 +223,7 @@ const Mapbox: React.FC = () => {
                         console.log('MADE IT');
                         popup.current = new mapboxgl.Popup({ offset: 25})
                             .setLngLat(mapPinsRef.current[editingPinRef.current].geotag)
-                            .setHTML(`<div >${mapPinsRef.current[editingPinRef.current].description || "Add description"}</div>`)
+                            .setHTML(`<div >${mapPinsRef.current[editingPinRef.current].description || "you need a description :)"}</div>`)
                             .addTo(mapRef.current);
                         setFormText(mapPinsRef.current[editingPinRef.current].description)
                         popup.current.on('close',() => {
