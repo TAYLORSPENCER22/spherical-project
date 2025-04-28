@@ -52,6 +52,7 @@ div.Footer p {
 div.mapboxgl-popup-content {
   width: 130px;
   height: 55px;
+  border-radius: 8px;
 }
 
 input#popup-input {

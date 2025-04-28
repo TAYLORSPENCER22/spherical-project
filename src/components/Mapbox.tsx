@@ -21,6 +21,8 @@ const Mapbox: React.FC = () => {
     
     const [mapFormVisible, setMapFormVisible] = useState(false);
     const [formText, setFormText] = useState('');
+    type  FormMode = 'create' | 'edit';
+    const [formMode, setFormMode] = useState<FormMode>('create');
 
 
     useEffect (() => {
@@ -132,8 +134,10 @@ const Mapbox: React.FC = () => {
                 if (newPin) {
                     editingPinRef.current = newPin.id;
                     mapPinsRef.current = {...mapPinsRef.current, [newPin.id]: {description: '', geotag: newPin.geometry.coordinates}};
-                    setMapFormVisible(true);
+                    setFormMode('create');
+                    setTimeout(() => setMapFormVisible(true), 0);
                 }
+                    
             }) 
 
             // If the draw button is clicked, remove formText from form
@@ -155,10 +159,12 @@ const Mapbox: React.FC = () => {
                     "points-are-blue.cold",
                     "highlight-active-points.cold"
                   ],
-                  // radius: 12   
+                //   radius: 12   
                 });
-                if (!features.length) return;
-              
+                if (features.length === 0) {
+                    setMapFormVisible(false);
+                    return;
+                  }
                 const feature = features[0];
 
                 //if there is no point -- return 
@@ -169,6 +175,7 @@ const Mapbox: React.FC = () => {
                     console.log('feature', feature);
 
                     editingPinRef.current = feature.properties.id;
+                    setFormMode('edit');
 
                     console.log('all local', localStorage)
                     console.log('editingPinRef', editingPinRef.current);
@@ -231,6 +238,11 @@ const Mapbox: React.FC = () => {
         <div>
             {mapFormVisible &&
         <form className='mapForm' >
+            <div className="formHeader">
+                {formMode === 'create'
+                ? "You're creating a new pin"
+                : "You're editing an existing pin"}
+            </div>
             <textarea 
             className='txtBox'
             maxLength={55} 
