@@ -112,7 +112,6 @@ const Mapbox: React.FC = () => {
                         coordinates: mapPinsRef.current[id].geotag,
                     }
                 }))
-                // console.log('newFeatures', newFeatures);
                 // loads all features to map
                 draw.add({type: "FeatureCollection", features: newFeatures});
             }
@@ -125,7 +124,7 @@ const Mapbox: React.FC = () => {
             map.on('draw.delete', (e) => {
 
               try {
-                  //parse current storage 
+                  //parse mapPins from localStorage 
                   const pins = JSON.parse(localStorage.getItem('mapPins') || '{}');
 
                   //loop through and delete the deleted
@@ -159,7 +158,7 @@ const Mapbox: React.FC = () => {
                     
             }) 
 
-            // If the draw button is clicked, remove formText from form
+            // If the draw button is clicked, clear formText from form
             const pointButton = document.querySelector('.mapbox-gl-draw_point');
             if (pointButton) {
               pointButton.addEventListener('click', () => {
@@ -167,7 +166,7 @@ const Mapbox: React.FC = () => {
               });
             }
 
-            //update the pop up to match the new pin coords 
+            //update the pop up to match the new pin coords when dragging pin
             map.on('draw.update', (e) => {
                 const moved = e.features?.[0];
                 if(!moved) return;
@@ -186,7 +185,7 @@ const Mapbox: React.FC = () => {
 
 
             map.on('click', (e) => {
-                // grab any click from these layers
+                // grab any click from these layers, layers needed for styling
                 const features = map.queryRenderedFeatures(e.point, {
                   layers: [
                     "points-are-blue.hot",
@@ -200,6 +199,7 @@ const Mapbox: React.FC = () => {
                     setMapFormVisible(false);
                     return;
                   }
+                  // grabs current clicked pin
                 const feature = features[0];
 
                 //if there is no point -- return 
@@ -207,18 +207,19 @@ const Mapbox: React.FC = () => {
                     return; //check  
                 } else {
 
+                    // set editingPinRef to use in handleSave
                     editingPinRef.current = feature.properties.id;
                     setFormMode('edit');
 
-                    //might have to check if currentEditingPin exists in mapPins
-
                     if (editingPinRef.current) {
-                        //  create pop
+                        //  create popup for clicked pin
                         popup.current = new mapboxgl.Popup({ offset: 25})
                             .setLngLat(mapPinsRef.current[editingPinRef.current].geotag)
                             .setHTML(`<div >${mapPinsRef.current[editingPinRef.current].description || "you need a description :)"}</div>`)
                             .addTo(mapRef.current);
                         setFormText(mapPinsRef.current[editingPinRef.current].description)
+
+                        //close popup handler
                         popup.current.on('close',() => {
                             setFormText('');
                             setMapFormVisible(false);
@@ -227,7 +228,7 @@ const Mapbox: React.FC = () => {
                 }
     
                 setMapFormVisible(true);
-        })
+          })
         })
         
       return () => map.remove();
@@ -236,7 +237,7 @@ const Mapbox: React.FC = () => {
  
         const handleSave = () => {
             if (!mapRef.current) return;
-            
+
             mapPinsRef.current = {...mapPinsRef.current, [editingPinRef.current]: {...mapPinsRef.current[editingPinRef.current], description: formText}};
             localStorage.setItem('mapPins', JSON.stringify(mapPinsRef.current));
         
@@ -260,7 +261,6 @@ const Mapbox: React.FC = () => {
             setFormText(e.target.value)
             
         }
-        // localStorage.clear();
       
   return (
     <> 
@@ -275,20 +275,19 @@ const Mapbox: React.FC = () => {
                 ? " Create pin"
                 : " Edit pin"}
             </div>
-            <textarea 
-            className='txtBox'
-            maxLength={107} 
-            placeholder='tell me about this place .. '
-            value={formText}
-            onChange={onFormChange}
-            >
-
-            </textarea>
+                <textarea 
+                  className='txtBox'
+                  maxLength={107} 
+                  placeholder='tell me about this place .. '
+                  value={formText}
+                  onChange={onFormChange}
+                />
                     <button
-                    className='saveBtn'
-                    type='button'
-                    onClick={handleSave}>Save
-        </button>
+                      className='saveBtn'
+                      type='button'
+                      onClick={handleSave}>
+                      Save
+                    </button>
         </form>
  } </div>
     </div>
