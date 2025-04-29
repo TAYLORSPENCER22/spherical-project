@@ -14,6 +14,6 @@ Libraries & Tools
 - React  
 - TypeScript
 - Mapbox GL JS 
-- @mapbox/mapbox-gl-draw** 
-- localStorage** 
+- @mapbox/mapbox-gl-draw
+- localStorage
 - CSS
