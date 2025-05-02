@@ -173,13 +173,16 @@ const Mapbox: React.FC = () => {
                 const id = String(moved.id);
                 const newCoords = moved.geometry.coordinates as [number, number];
 
+
                 if (popup.current && editingPinRef.current === id) {
                     popup.current.setLngLat(newCoords);
                   }
 
                 if (mapPinsRef.current[id]) {
                     mapPinsRef.current[id].geotag = newCoords;
+                    localStorage.setItem('mapPins', JSON.stringify(mapPinsRef.current));
             }
+
         });
 
 
